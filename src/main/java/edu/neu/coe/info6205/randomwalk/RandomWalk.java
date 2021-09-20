@@ -21,6 +21,9 @@ public class RandomWalk {
      */
     private void move(int dx, int dy) {
         // TO BE IMPLEMENTED
+        //System.out.println("dx = " + dx + "  dy = " + dy);
+        x = x + dx;
+        y = y + dy;
     }
 
     /**
@@ -30,6 +33,9 @@ public class RandomWalk {
      */
     private void randomWalk(int m) {
         // TO BE IMPLEMENTED
+        for (int i = 0; i < m; i++) {
+            randomMove();
+        }
     }
 
     /**
@@ -49,6 +55,9 @@ public class RandomWalk {
      */
     public double distance() {
         // TO BE IMPLEMENTED
+        if (! (x == 0 && y ==0)) {
+            return Math.sqrt(x*x*1.0 + y*y*1.0);
+        }
         return 0;
     }
 
@@ -61,6 +70,7 @@ public class RandomWalk {
      */
     public static double randomWalkMulti(int m, int n) {
         double totalDistance = 0;
+
         for (int i = 0; i < n; i++) {
             RandomWalk walk = new RandomWalk();
             walk.randomWalk(m);
@@ -69,14 +79,29 @@ public class RandomWalk {
         return totalDistance / n;
     }
 
+
     public static void main(String[] args) {
-        if (args.length == 0)
-            throw new RuntimeException("Syntax: RandomWalk steps [experiments]");
-        int m = Integer.parseInt(args[0]);
-        int n = 30;
-        if (args.length > 1) n = Integer.parseInt(args[1]);
-        double meanDistance = randomWalkMulti(m, n);
-        System.out.println(m + " steps: " + meanDistance + " over " + n + " experiments");
+
+        int step = 0;
+
+        int m = 0; // step n
+        for (int i = 1; i <= 8; i++) {
+            step += 1;
+
+            m += 10*step*step;  //step n increment by 10*step*step to make larger steps
+            System.out.println("Run " + step + "      Step value is :  " + m);
+            double totalMean = 0;
+            for (int j = 1; j <= 10; j++) {
+                int n = 10;   // experiments
+                double meanDistance = randomWalkMulti(m, n);
+                System.out.println(m + " steps: " + meanDistance + " over " + n + " experiments");
+                totalMean += meanDistance;
+
+            }
+            System.out.println("Mean Distance from 10 experiments:  " + totalMean/10);
+            System.out.println();
+        }
+
     }
 
 }
