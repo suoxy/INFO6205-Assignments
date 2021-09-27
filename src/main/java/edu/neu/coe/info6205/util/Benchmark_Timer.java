@@ -4,6 +4,12 @@
 
 package edu.neu.coe.info6205.util;
 
+import edu.neu.coe.info6205.sort.elementary.InsertionSort;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -125,4 +131,124 @@ public class Benchmark_Timer<T> implements Benchmark<T> {
     private final Consumer<T> fPost;
 
     final static LazyLogger logger = new LazyLogger(Benchmark_Timer.class);
+
+
+
+
+
+    /**
+     * main method for part 3 of assignment 2
+     *
+     * @param args
+     */
+
+    public static void main(String[] args) {
+        Random r = new Random();
+        int m = 100;   // number of runs
+        // randomly ordered array's initial size of randomly ordered array, ordered array, reverse ordered array, partially ordered array
+        //int startSize = 5000;
+        int randomSize = 10000;
+        int orderedSize = 10000;
+        int partOrderedSize = 10000;
+        int reversedSize = 10000;
+        InsertionSort<Integer> insertionSort = new InsertionSort<>();
+        /**
+         * random array sorting and timing
+         */
+        for (int k = 0; k < 5; k++) {
+            Consumer<Integer[]> consumer = array -> insertionSort.sort(array, 0, array.length);
+            Benchmark_Timer<Integer[]> benchTimer = new Benchmark_Timer<>("Random array size : " + randomSize, consumer);
+            int size = randomSize;
+            Supplier<Integer[]> randomSupplier = new Supplier<Integer[]>() {
+                @Override
+                public Integer[] get() {
+                    Integer[] array = new Integer[size];
+                    for (int i = 0; i < size; i++) {
+                        array[i] = r.nextInt();
+                    }
+                    return array;
+                }
+            };
+            consumer.accept(randomSupplier.get());
+            System.out.println("time spent:   " + benchTimer.run(randomSupplier.get(), m));
+            randomSize *= 2;
+        }
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        /**
+         * ordered array sorting and timing
+         */
+        for (int k = 0; k < 5; k++) {
+
+            Consumer<Integer[]> consumer = array -> insertionSort.sort(array, 0, array.length);
+            Benchmark_Timer<Integer[]> benchTimer = new Benchmark_Timer<>("Ordered array size : " + orderedSize, consumer);
+            int size = orderedSize;
+            Supplier<Integer[]> orderedSupplier = new Supplier<Integer[]>() {
+                @Override
+                public Integer[] get() {
+                    Integer[] array = new Integer[size];
+                    for (int i = 0; i < size; i++) {
+                        array[i] = i;
+                    }
+                    return array;
+                }
+            };
+            consumer.accept(orderedSupplier.get());
+            System.out.println("time spent:   " + benchTimer.run(orderedSupplier.get(), m));
+            orderedSize *= 2;
+        }
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+
+        /**
+         *
+         * partially ordered array sorting and timing
+         *
+         */
+
+        for (int k = 0; k < 5; k++) {
+            Consumer<Integer[]> consumer = array -> insertionSort.sort(array, 0, array.length);
+            Benchmark_Timer<Integer[]> benchTimer = new Benchmark_Timer<>("Partial ordered array size : " + partOrderedSize, consumer);
+            int N = partOrderedSize;
+            Supplier<Integer[]> partialOrderedSupplier = () -> {
+                Integer[] array = new Integer[N];
+                for (int i = 0; i < N / 2; i++) {
+                    array[i] = i*2;
+                }
+                for (int i = N / 2; i < N; i++) {
+                    array[i] = r.nextInt()+2;
+                }
+                return array;
+            };
+            consumer.accept(partialOrderedSupplier.get());
+            System.out.println("time spent:   " + benchTimer.run(partialOrderedSupplier.get(), m));
+            partOrderedSize *= 2;
+        }
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+
+        /**
+         *
+         * reverse ordered array sorting and timing
+         *
+         */
+
+        for (int k = 0; k < 5; k++) {
+            Consumer<Integer[]> consumer = array -> insertionSort.sort(array, 0, array.length);
+            Benchmark_Timer<Integer[]> benchTimer = new Benchmark_Timer<>("Reverse array size : " + reversedSize, consumer);
+            int size = reversedSize;
+            Supplier<Integer[]> reverseSupplier = () -> {
+                Integer[] array = new Integer[size];
+
+                for (int i = 0; i < size; i++) {
+                    array[i] = i*2;
+                }
+                Collections.reverse(Arrays.asList(array));
+                return array;
+            };
+            consumer.accept(reverseSupplier.get());
+            System.out.println("time spent:   " + benchTimer.run(reverseSupplier.get(), m));
+            reversedSize *= 2;
+        }
+    }
 }

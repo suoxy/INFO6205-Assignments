@@ -3,10 +3,15 @@
  */
 package edu.neu.coe.info6205.sort.elementary;
 
+
 import edu.neu.coe.info6205.sort.BaseHelper;
 import edu.neu.coe.info6205.sort.Helper;
 import edu.neu.coe.info6205.sort.SortWithHelper;
 import edu.neu.coe.info6205.util.Config;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 
 public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
 
@@ -59,7 +64,17 @@ public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
         final Helper<X> helper = getHelper();
 
         // TO BE IMPLEMENTED
+
+        for (int i = from; i < to; i++) {
+            boolean a = true;
+            int current = i;
+            while (a && current > from) {
+                a = helper.swapStableConditional(xs, current);
+                current--;
+            }
+        }
     }
+
 
     public static final String DESCRIPTION = "Insertion sort";
 
