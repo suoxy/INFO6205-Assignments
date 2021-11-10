@@ -94,7 +94,7 @@ public class PriorityQueue<K> implements Iterable<K> {
      * @param key the value of the key to give
      */
     public void give(K key) {
-        if (last == binHeap.length - 1)
+        if (last == binHeap.length - 1) // && key > binHeap[last]
             last--; // if we are already at capacity, then we arbitrarily trash the least eligible element
         // (even if it's more eligible than key).
         binHeap[++last] = key; // insert the key into the binary heap just after the last element
